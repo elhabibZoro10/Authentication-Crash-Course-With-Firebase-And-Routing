@@ -21,7 +21,7 @@ const Signup = () => {
             <Form.Label htmlFor='password-confirmation' >Pasword Confirmation</Form.Label>
             <Form.Control type='password' id='password-confirmation' />
           </Form.Group>
-          <Button variant="primary" type="submit">Signup</Button>
+          <Button className='w-100 text-center mt-3' variant="primary" type="submit">Signup</Button>
           </Form>
         </Card.Body>
       </Card>

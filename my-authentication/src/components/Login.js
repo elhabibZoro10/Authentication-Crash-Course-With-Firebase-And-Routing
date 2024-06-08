@@ -17,7 +17,7 @@ const Login = () => {
               <Form.Label htmlFor='password' >Pasword</Form.Label>
               <Form.Control type='password' id='password' />
             </Form.Group>      
-          <Button variant="primary" type="submit">Log In</Button>
+          <Button className='w-100 text-center mt-3' variant="primary" type="submit">Log In</Button>
           </Form>
 
           <div className='w-100 text-center mt-3' >
