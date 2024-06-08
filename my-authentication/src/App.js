@@ -2,6 +2,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Container } from 'react-bootstrap';
 import Signup from './components/Signup';
+import Login from './components/Login';
+import ForgotPassword from './components/ForgotPassword';
+import UpdateProfile from './components/UpdateProfile';
+import Dashboard from './components/Dashboard';
 
 
 function App() {
