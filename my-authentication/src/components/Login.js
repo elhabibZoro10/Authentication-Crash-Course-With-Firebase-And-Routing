@@ -1,14 +1,43 @@
-import React from 'react'
-import { Button, Card, Form } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import React, { useRef, useState } from 'react'
+import { Alert, Button, Card, Form } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+
+  const { login } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setError("");
+      setLoading(true);
+      await login(emailRef.current.value, passwordRef.current.value);
+      // navigate('/')
+    } catch (error) {
+      setError("Failed to create an account");
+      console.error("Signup error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <>
       <Card>
         <Card.Body>
           <h2 className='text-center mb-4' >Login</h2>
-          <Form>
+          {error && <Alert variant='danger'>{error}</Alert>}
+          <Form onSubmit={handleSubmit} >
             <Form.Group>
               <Form.Label htmlFor='email' >Email</Form.Label>
               <Form.Control type='email' id='email' />
@@ -17,7 +46,7 @@ const Login = () => {
               <Form.Label htmlFor='password' >Pasword</Form.Label>
               <Form.Control type='password' id='password' />
             </Form.Group>      
-          <Button className='w-100 text-center mt-3' variant="primary" type="submit">Log In</Button>
+          <Button className='w-100 text-center mt-3' variant="primary" type="submit" disabled={loading} >Log In</Button>
           </Form>
 
           <div className='w-100 text-center mt-3' >
