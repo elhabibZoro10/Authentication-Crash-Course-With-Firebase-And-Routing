@@ -1,9 +1,18 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { 
+    createUserWithEmailAndPassword, 
+    onAuthStateChanged, 
+    sendPasswordResetEmail, 
+    signInWithEmailAndPassword, 
+    signOut, 
+    updateEmail, 
+    updatePassword,
+    reauthenticateWithCredential,
+    EmailAuthProvider 
+} from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import auth from "../firebaseConfig";
 
 const AuthContext = createContext();
-
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -24,6 +33,23 @@ export const AuthProvider = ({ children }) => {
         return sendPasswordResetEmail(auth, email);
     };
 
+    const reauthenticate = (currentPassword) => {
+        const credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
+        return reauthenticateWithCredential(auth.currentUser, credential);
+    }
+
+    const updateUserEmail = (email, currentPassword) => {
+        return reauthenticate(currentPassword).then(() => {
+            return updateEmail(auth.currentUser, email);
+        });
+    };
+
+    const updateUserPassword = (password, currentPassword) => {
+        return reauthenticate(currentPassword).then(() => {
+            return updatePassword(auth.currentUser, password);
+        });
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
@@ -35,13 +61,13 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ currentUser, signup , logout , login , resetPassword}}>
+        <AuthContext.Provider value={{ currentUser, signup, logout, login, resetPassword, updateUserEmail, updateUserPassword }}>
             {!loading && children}
         </AuthContext.Provider>
     );
 }
 
-export default AuthProvider
+export default AuthProvider;
 
 export const useAuth = () => {
     return useContext(AuthContext)
